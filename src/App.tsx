@@ -1,22 +1,24 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import clsx from 'clsx'
 import * as htmlToImage from 'html-to-image'
 import { IconSearch, IconPlus, IconLoader } from '@tabler/icons-react'
+import { twMerge } from 'tailwind-merge'
 
 type TileProps = {
   src: string
   onPick: (file: File) => void
   className?: string
+  ImageProps?: React.ImgHTMLAttributes<HTMLImageElement>
 }
 
-const Tile: React.FC<TileProps> = ({ src, onPick, className }) => {
+const Tile: React.FC<TileProps> = ({ src, onPick, className, ImageProps }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
     <button
       type="button"
-      className={clsx(
-        'cursor-pointer relative block overflow-hidden rounded-xl focus:outline-none group',
+      className={cn(
+        'group relative block cursor-pointer overflow-hidden focus:outline-none',
         className,
       )}
       onClick={() => inputRef.current?.click()}
@@ -28,7 +30,10 @@ const Tile: React.FC<TileProps> = ({ src, onPick, className }) => {
 
       <img
         crossOrigin="anonymous"
-        className="w-full h-full object-cover bg-gray-200"
+        className={cn(
+          'h-full w-full bg-gray-200 object-cover',
+          ImageProps?.className,
+        )}
         alt=""
         src={src}
       />
@@ -47,11 +52,12 @@ const Tile: React.FC<TileProps> = ({ src, onPick, className }) => {
   )
 }
 
-function App() {
+const App: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null)
   const [query, setQuery] = useState('autumn mood')
   const [isDownloading, setIsDownloading] = useState(false)
-
+  const [borderRadius, setBorderRadius] = useState(true)
+  const [showSearchBar, setShowSearchBar] = useState(true)
   const [images, setImages] = useState<string[]>([
     'https://images.unsplash.com/photo-1670141545540-7ffd026a6c74?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=736',
     'https://images.unsplash.com/photo-1542996416-2d720327bdd3?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1170',
@@ -112,83 +118,131 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-300 gap-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-300">
+      <div className="mb-2 flex items-center gap-4">
+        <fieldset className="fieldset">
+          <label className="label text-base-300">
+            <input
+              type="checkbox"
+              checked={borderRadius}
+              className="toggle"
+              onChange={() => setBorderRadius((v) => !v)}
+            />
+            Border radius
+          </label>
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <label className="label text-base-300">
+            <input
+              type="checkbox"
+              checked={showSearchBar}
+              className="toggle"
+              onChange={() => setShowSearchBar((v) => !v)}
+            />
+            Show search bar
+          </label>
+        </fieldset>
+      </div>
+
       <div
         ref={ref}
-        className="relative mx-auto w-full max-w-[400px] aspect-9/16 overflow-hidden shadow-lg bg-[#f8f5f0]"
+        className="relative mx-auto aspect-9/16 w-full max-w-[400px] overflow-hidden bg-[#f8f5f0] shadow-lg"
       >
-        <div className="absolute inset-0 grid grid-cols-2 gap-2 px-2 z-1">
-          <div className="flex flex-col gap-2 h-full min-h-0 relative bottom-3">
+        <div className="absolute inset-0 z-1 grid grid-cols-2 gap-2 px-2">
+          <div className="relative bottom-3 flex h-full min-h-0 flex-col gap-2">
             <Tile
               src={images[0]}
               onPick={handlePick(0)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
             <Tile
               src={images[1]}
               onPick={handlePick(1)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
             <Tile
               src={images[2]}
               onPick={handlePick(2)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
           </div>
 
-          <div className="flex flex-col gap-2 h-full min-h-0 relative top-3">
+          <div className="relative top-3 flex h-full min-h-0 flex-col gap-2">
             <Tile
               src={images[3]}
               onPick={handlePick(3)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
             <Tile
               src={images[4]}
               onPick={handlePick(4)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
             <Tile
               src={images[5]}
               onPick={handlePick(5)}
-              className="h-[calc((100%-1rem)/3)]"
+              className={'h-[calc((100%-1rem)/3)]'}
+              ImageProps={{
+                className: borderRadius ? 'rounded-xl' : undefined,
+              }}
             />
           </div>
         </div>
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 z-2">
-          <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full pl-4 pr-2 py-2 shadow">
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search…"
-              className="bg-transparent outline-none border-none text-gray-700 font-medium placeholder-gray-400"
-            />
-            <span className="inline-flex h-7 w-7 rounded-full bg-black/80 items-center justify-center">
-              <IconSearch className="h-4 w-4 text-white" />
-            </span>
+        {showSearchBar && (
+          <div className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2">
+            <div className="flex items-center gap-2 rounded-full bg-white/90 py-2 pr-2 pl-4 shadow backdrop-blur-sm">
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search…"
+                className="border-none bg-transparent font-medium text-gray-700 placeholder-gray-400 outline-none"
+              />
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/80">
+                <IconSearch className="h-4 w-4 text-white" />
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="flex gap-3">
         <button
           onClick={handleExport}
           disabled={isDownloading}
-          className={clsx(
-            'cursor-pointer px-4 py-2 bg-amber-700 text-white rounded-lg shadow hover:bg-amber-800 transition relative',
-            isDownloading && 'opacity-50',
-          )}
+          aria-disabled={isDownloading}
+          className={clsx('btn', isDownloading && 'btn-disabled')}
         >
           <span className={isDownloading ? 'invisible' : undefined}>
             Download collage
           </span>
           {isDownloading && (
-            <IconLoader className="h-5 w-5 animate-spin mx-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <IconLoader className="absolute top-1/2 left-1/2 mx-auto h-5 w-5 -translate-x-1/2 -translate-y-1/2 animate-spin" />
           )}
         </button>
       </div>
     </div>
   )
+}
+
+function cn(...classes: (string | undefined)[]) {
+  return twMerge(clsx(...classes))
 }
 
 export default App
