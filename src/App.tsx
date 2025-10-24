@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import clsx from 'clsx'
+import { type ClassValue, clsx } from 'clsx'
 import * as htmlToImage from 'html-to-image'
 import { IconSearch, IconPlus, IconLoader } from '@tabler/icons-react'
 import { twMerge } from 'tailwind-merge'
@@ -58,6 +58,7 @@ const App: React.FC = () => {
   const [isDownloading, setIsDownloading] = useState(false)
   const [borderRadius, setBorderRadius] = useState(true)
   const [showSearchBar, setShowSearchBar] = useState(true)
+  const [gap, setGap] = useState(2)
   const [images, setImages] = useState<string[]>([
     'https://images.unsplash.com/photo-1670141545540-7ffd026a6c74?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=736',
     'https://images.unsplash.com/photo-1542996416-2d720327bdd3?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1170',
@@ -118,10 +119,10 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-300">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
       <div className="mb-2 flex items-center gap-4">
         <fieldset className="fieldset">
-          <label className="label text-base-300">
+          <label className="label text-primary">
             <input
               type="checkbox"
               checked={borderRadius}
@@ -133,7 +134,7 @@ const App: React.FC = () => {
         </fieldset>
 
         <fieldset className="fieldset">
-          <label className="label text-base-300">
+          <label className="label text-primary">
             <input
               type="checkbox"
               checked={showSearchBar}
@@ -143,65 +144,96 @@ const App: React.FC = () => {
             Show search bar
           </label>
         </fieldset>
+
+        <fieldset className="fieldset">
+          <select
+            defaultValue="Select spacing"
+            className="select"
+            value={gap}
+            onChange={(e) => setGap(Number(e.target.value))}
+          >
+            <option disabled={true}>Select spacing</option>
+            <option value={0}>0 spacing</option>
+            <option value={2}>2 spacing</option>
+            <option value={4}>4 spacing</option>
+            <option value={8}>8 spacing</option>
+          </select>
+        </fieldset>
       </div>
 
       <div
         ref={ref}
-        className="relative mx-auto aspect-9/16 w-full max-w-[400px] overflow-hidden bg-[#f8f5f0] shadow-lg"
+        className="relative mx-auto aspect-9/16 w-full max-w-[450px] overflow-hidden bg-[#f8f5f0] shadow-lg"
       >
-        <div className="absolute inset-0 z-1 grid grid-cols-2 gap-2 px-2">
-          <div className="relative bottom-3 flex h-full min-h-0 flex-col gap-2">
-            <Tile
-              src={images[0]}
-              onPick={handlePick(0)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
-            <Tile
-              src={images[1]}
-              onPick={handlePick(1)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
-            <Tile
-              src={images[2]}
-              onPick={handlePick(2)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
+        <div className="absolute inset-0 z-0">
+          <img
+            src={images[0]}
+            alt=""
+            className="h-full w-full scale-105 object-cover blur-lg"
+            style={{ filter: 'blur(16px) brightness(0.8)' }}
+          />
+          <div className="absolute inset-0 bg-white/30 backdrop-blur-sm" />
+        </div>
+
+        <div
+          className={cn('absolute inset-0 z-1 grid grid-cols-2', {
+            'gap-0': gap === 0,
+            'gap-2': gap === 2,
+            'gap-4': gap === 4,
+            'gap-8': gap === 8,
+            'px-0': gap === 0,
+            'px-2': gap === 2,
+            'px-4': gap === 4,
+            'px-8': gap === 8,
+          })}
+        >
+          <div
+            className={cn('relative flex h-full min-h-0 flex-col', {
+              'bottom-0': gap === 0,
+              'bottom-2': gap === 2,
+              'bottom-4': gap === 4,
+              'bottom-8': gap === 8,
+              'gap-0': gap === 0,
+              'gap-2': gap === 2,
+              'gap-4': gap === 4,
+              'gap-8': gap === 8,
+            })}
+          >
+            {[0, 1, 2].map((index) => (
+              <Tile
+                key={index}
+                src={images[index]}
+                onPick={handlePick(index)}
+                className={'h-[calc((100%)/3)]'}
+                ImageProps={{
+                  className: borderRadius ? 'rounded-xl' : undefined,
+                }}
+              />
+            ))}
           </div>
 
-          <div className="relative top-3 flex h-full min-h-0 flex-col gap-2">
-            <Tile
-              src={images[3]}
-              onPick={handlePick(3)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
-            <Tile
-              src={images[4]}
-              onPick={handlePick(4)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
-            <Tile
-              src={images[5]}
-              onPick={handlePick(5)}
-              className={'h-[calc((100%-1rem)/3)]'}
-              ImageProps={{
-                className: borderRadius ? 'rounded-xl' : undefined,
-              }}
-            />
+          <div
+            className={cn('relative flex h-full min-h-0 flex-col', {
+              'top-0': gap === 0,
+              'top-2': gap === 2,
+              'top-4': gap === 4,
+              'top-8': gap === 8,
+              'gap-0': gap === 0,
+              'gap-2': gap === 2,
+              'gap-4': gap === 4,
+              'gap-8': gap === 8,
+            })}
+          >
+            {[3, 4, 5].map((index) => (
+              <Tile
+                src={images[index]}
+                onPick={handlePick(index)}
+                className={'h-[calc((100%)/3)]'}
+                ImageProps={{
+                  className: borderRadius ? 'rounded-xl' : undefined,
+                }}
+              />
+            ))}
           </div>
         </div>
 
@@ -241,8 +273,8 @@ const App: React.FC = () => {
   )
 }
 
-function cn(...classes: (string | undefined)[]) {
-  return twMerge(clsx(...classes))
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
 
 export default App
