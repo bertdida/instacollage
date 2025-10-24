@@ -119,7 +119,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
       <div className="mb-2 flex items-center gap-4">
         <fieldset className="fieldset">
           <label className="label text-primary">
@@ -238,15 +238,15 @@ const App: React.FC = () => {
         </div>
 
         {showSearchBar && (
-          <div className="absolute top-1/2 left-1/2 z-2 -translate-x-1/2">
-            <div className="flex items-center gap-2 rounded-full bg-white/90 py-2 pr-2 pl-4 shadow backdrop-blur-sm">
+          <div className="absolute top-1/2 left-1/2 z-2 h-10 w-1/2 -translate-x-1/2">
+            <div className="relative flex h-full w-full items-center gap-2 rounded-full bg-white/90 pr-2 pl-4 shadow backdrop-blur-sm">
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search…"
                 className="border-none bg-transparent font-medium text-gray-700 placeholder-gray-400 outline-none"
               />
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/80">
+              <span className="absolute right-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/80">
                 <IconSearch className="h-4 w-4 text-white" />
               </span>
             </div>
@@ -259,7 +259,7 @@ const App: React.FC = () => {
           onClick={handleExport}
           disabled={isDownloading}
           aria-disabled={isDownloading}
-          className={clsx('btn', isDownloading && 'btn-disabled')}
+          className={clsx('btn relative', isDownloading && 'btn-disabled')}
         >
           <span className={isDownloading ? 'invisible' : undefined}>
             Download collage
