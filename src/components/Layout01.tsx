@@ -68,7 +68,7 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
+    <div>
       <div className="mb-2 flex items-center gap-4">
         <fieldset className="fieldset">
           <label className="label text-primary">

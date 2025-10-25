@@ -1,4 +1,5 @@
 import Layout01 from './components/Layout01'
+import Layout02 from './components/Layout02'
 
 const images: string[] = [
   'https://images.unsplash.com/photo-1670141545540-7ffd026a6c74?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=736',
@@ -10,7 +11,12 @@ const images: string[] = [
 ]
 
 const App: React.FC = () => {
-  return <Layout01 images={images} />
+  return (
+    <>
+      <Layout01 images={images} />
+      <Layout02 images={images} />
+    </>
+  )
 }
 
 export default App
