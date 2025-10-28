@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
-import * as htmlToImage from 'html-to-image'
 import { IconSearch, IconLoader } from '@tabler/icons-react'
 import cn from '../cn'
 import Tile from './Tile'
+import { useExportPng } from '../hooks/useExportPng'
+import { useImagePicker } from '../hooks/useImagePicker'
 
 type Layout01Props = {
   images: string[]
@@ -11,61 +12,12 @@ type Layout01Props = {
 const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [query, setQuery] = useState('autumn mood')
-  const [isDownloading, setIsDownloading] = useState(false)
   const [borderRadius, setBorderRadius] = useState(true)
   const [showSearchBar, setShowSearchBar] = useState(true)
-  const [gap, setGap] = useState(2)
-  const [images, setImages] = useState<string[]>(imagesProp)
+  const [gap, setGap] = useState(4)
 
-  const handlePick = (idx: number) => (file: File) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      const url = reader.result as string
-      setImages((prev) => {
-        const next = [...prev]
-        next[idx] = url
-        return next
-      })
-    }
-    reader.readAsDataURL(file)
-  }
-
-  async function handleExport() {
-    if (!ref.current) return
-    if (isDownloading) return
-
-    setIsDownloading(true)
-    const node = ref.current
-
-    try {
-      // Scale clone to 1080x1920 without reflowing your live DOM
-      const { width: w, height: h } = node.getBoundingClientRect()
-      const targetW = 1080
-      const targetH = 1920
-      const scaleX = targetW / w
-      const scaleY = targetH / h
-
-      const dataUrl = await htmlToImage.toPng(node, {
-        width: targetW,
-        height: targetH,
-        cacheBust: true,
-        pixelRatio: 1,
-        style: {
-          transform: `scale(${scaleX}, ${scaleY})`,
-          transformOrigin: 'top left',
-          margin: '0',
-          display: 'block',
-        },
-      })
-
-      const link = document.createElement('a')
-      link.download = query.replace(/\s+/g, '-').toLowerCase() + '.png'
-      link.href = dataUrl
-      link.click()
-    } finally {
-      setIsDownloading(false)
-    }
-  }
+  const { images, handleImageSelect } = useImagePicker(imagesProp)
+  const { isExporting, exportPng } = useExportPng(ref, { fileName: query })
 
   return (
     <div>
@@ -152,7 +104,7 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
               <Tile
                 key={index}
                 src={images[index]}
-                onPick={handlePick(index)}
+                onPick={handleImageSelect(index)}
                 className={'h-[calc((100%)/3)]'}
                 ImageProps={{
                   className: borderRadius ? 'rounded-xl' : undefined,
@@ -176,7 +128,7 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
             {[3, 4, 5].map((index) => (
               <Tile
                 src={images[index]}
-                onPick={handlePick(index)}
+                onPick={handleImageSelect(index)}
                 className={'h-[calc((100%)/3)]'}
                 ImageProps={{
                   className: borderRadius ? 'rounded-xl' : undefined,
@@ -205,15 +157,15 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
 
       <div className="flex gap-3">
         <button
-          onClick={handleExport}
-          disabled={isDownloading}
-          aria-disabled={isDownloading}
-          className={cn('btn relative', isDownloading && 'btn-disabled')}
+          onClick={exportPng}
+          disabled={isExporting}
+          aria-disabled={isExporting}
+          className={cn('btn relative', isExporting && 'btn-disabled')}
         >
-          <span className={isDownloading ? 'invisible' : undefined}>
+          <span className={isExporting ? 'invisible' : undefined}>
             Download collage
           </span>
-          {isDownloading && (
+          {isExporting && (
             <IconLoader className="absolute top-1/2 left-1/2 mx-auto h-5 w-5 -translate-x-1/2 -translate-y-1/2 animate-spin" />
           )}
         </button>
