@@ -1,5 +1,8 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import Tile from './Tile'
+import { useImagePicker } from '../hooks/useImagePicker'
+import { useExportImage } from '../hooks/useExportImage'
+import DownloadButton from './DownloadButton'
 
 type Layout02Props = {
   images: string[]
@@ -7,20 +10,8 @@ type Layout02Props = {
 
 const Layout02: React.FC<Layout02Props> = ({ images: imagesProp }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [images, setImages] = useState<string[]>(imagesProp)
-
-  const handlePick = (idx: number) => (file: File) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      const url = reader.result as string
-      setImages((prev) => {
-        const next = [...prev]
-        next[idx] = url
-        return next
-      })
-    }
-    reader.readAsDataURL(file)
-  }
+  const { images, handleImageSelect } = useImagePicker(imagesProp)
+  const { isExporting, exportImage } = useExportImage(ref)
 
   return (
     <div
@@ -30,7 +21,7 @@ const Layout02: React.FC<Layout02Props> = ({ images: imagesProp }) => {
       <div className="absolute inset-0 z-0">
         <Tile
           src={images[0]}
-          onPick={handlePick(0)}
+          onPick={handleImageSelect(0)}
           className="h-full w-full object-cover"
         />
       </div>
@@ -40,7 +31,7 @@ const Layout02: React.FC<Layout02Props> = ({ images: imagesProp }) => {
           <div key={index} className="border-10 border-white">
             <Tile
               src={images[index]}
-              onPick={handlePick(index)}
+              onPick={handleImageSelect(index)}
               className="aspect-square w-full"
               ImageProps={{
                 className: 'object-cover',
@@ -48,6 +39,10 @@ const Layout02: React.FC<Layout02Props> = ({ images: imagesProp }) => {
             />
           </div>
         ))}
+      </div>
+
+      <div className="flex gap-3">
+        <DownloadButton isLoading={isExporting} onClick={exportImage} />
       </div>
     </div>
   )

@@ -5,12 +5,12 @@ import { nanoid } from 'nanoid'
 const WIDTH = 1080
 const HEIGHT = 1920
 
-export function useExportPng<T extends HTMLElement>(
+export function useExportImage<T extends HTMLElement>(
   nodeRef: RefObject<T | null>,
 ) {
   const [isExporting, setIsExporting] = useState(false)
 
-  const exportPng = useCallback(async () => {
+  const exportImage = useCallback(async () => {
     if (typeof window === 'undefined') {
       return
     }
@@ -50,6 +50,6 @@ export function useExportPng<T extends HTMLElement>(
 
   return {
     isExporting,
-    exportPng,
+    exportImage,
   }
 }

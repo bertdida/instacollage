@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
-import { IconLoader } from '@tabler/icons-react'
 import cn from '../cn'
 import Tile from './Tile'
-import { useExportPng } from '../hooks/useExportPng'
+import { useExportImage } from '../hooks/useExportImage'
 import { useImagePicker } from '../hooks/useImagePicker'
+import DownloadButton from './DownloadButton'
 
 type Layout01Props = {
   images: string[]
@@ -15,7 +15,7 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
   const [gap, setGap] = useState(4)
 
   const { images, handleImageSelect } = useImagePicker(imagesProp)
-  const { isExporting, exportPng } = useExportPng(ref)
+  const { isExporting, exportImage } = useExportImage(ref)
 
   return (
     <div>
@@ -126,19 +126,7 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
       </div>
 
       <div className="flex gap-3">
-        <button
-          onClick={exportPng}
-          disabled={isExporting}
-          aria-disabled={isExporting}
-          className={cn('btn relative', isExporting && 'btn-disabled')}
-        >
-          <span className={isExporting ? 'invisible' : undefined}>
-            Download collage
-          </span>
-          {isExporting && (
-            <IconLoader className="absolute top-1/2 left-1/2 mx-auto h-5 w-5 -translate-x-1/2 -translate-y-1/2 animate-spin" />
-          )}
-        </button>
+        <DownloadButton isLoading={isExporting} onClick={exportImage} />
       </div>
     </div>
   )
