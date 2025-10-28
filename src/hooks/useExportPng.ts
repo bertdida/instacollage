@@ -1,16 +1,12 @@
 import { type RefObject, useCallback, useState } from 'react'
 import * as htmlToImage from 'html-to-image'
-
-type UseExportPngOptions = {
-  fileName: string
-}
+import { nanoid } from 'nanoid'
 
 const WIDTH = 1080
 const HEIGHT = 1920
 
 export function useExportPng<T extends HTMLElement>(
   nodeRef: RefObject<T | null>,
-  { fileName }: UseExportPngOptions,
 ) {
   const [isExporting, setIsExporting] = useState(false)
 
@@ -44,13 +40,13 @@ export function useExportPng<T extends HTMLElement>(
       })
 
       const link = document.createElement('a')
-      link.download = `${fileName.replace(/\s+/g, '-').toLowerCase()}.png`
+      link.download = `${nanoid()}.png`
       link.href = dataUrl
       link.click()
     } finally {
       setIsExporting(false)
     }
-  }, [nodeRef, isExporting, fileName])
+  }, [nodeRef, isExporting])
 
   return {
     isExporting,

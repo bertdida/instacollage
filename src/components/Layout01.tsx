@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { IconSearch, IconLoader } from '@tabler/icons-react'
+import { IconLoader } from '@tabler/icons-react'
 import cn from '../cn'
 import Tile from './Tile'
 import { useExportPng } from '../hooks/useExportPng'
@@ -11,13 +11,11 @@ type Layout01Props = {
 
 const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [query, setQuery] = useState('autumn mood')
   const [borderRadius, setBorderRadius] = useState(true)
-  const [showSearchBar, setShowSearchBar] = useState(true)
   const [gap, setGap] = useState(4)
 
   const { images, handleImageSelect } = useImagePicker(imagesProp)
-  const { isExporting, exportPng } = useExportPng(ref, { fileName: query })
+  const { isExporting, exportPng } = useExportPng(ref)
 
   return (
     <div>
@@ -31,18 +29,6 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
               onChange={() => setBorderRadius((v) => !v)}
             />
             Border radius
-          </label>
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <label className="label text-primary">
-            <input
-              type="checkbox"
-              checked={showSearchBar}
-              className="toggle"
-              onChange={() => setShowSearchBar((v) => !v)}
-            />
-            Show search bar
           </label>
         </fieldset>
 
@@ -137,22 +123,6 @@ const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
             ))}
           </div>
         </div>
-
-        {showSearchBar && (
-          <div className="absolute top-1/2 left-1/2 z-2 h-10 w-1/2 -translate-x-1/2">
-            <div className="relative flex h-full w-full items-center gap-2 rounded-full bg-white/90 pr-2 pl-4 shadow backdrop-blur-sm">
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search…"
-                className="border-none bg-transparent font-medium text-gray-700 placeholder-gray-400 outline-none"
-              />
-              <span className="absolute right-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/80">
-                <IconSearch className="h-4 w-4 text-white" />
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="flex gap-3">
