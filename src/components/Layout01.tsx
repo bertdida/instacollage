@@ -11,7 +11,7 @@ type Layout01Props = {
 
 const Layout01: React.FC<Layout01Props> = ({ images: imagesProp }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [borderRadius, setBorderRadius] = useState(true)
+  const [borderRadius, setBorderRadius] = useState(false)
   const [gap, setGap] = useState(4)
 
   const { images, handleImageSelect } = useImagePicker(imagesProp)
