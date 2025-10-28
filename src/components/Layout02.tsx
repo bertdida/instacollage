@@ -37,15 +37,16 @@ const Layout02: React.FC<Layout02Props> = ({ images: imagesProp }) => {
 
       <div className="absolute flex h-full w-[55%] flex-col justify-center gap-4 pl-8">
         {[1, 2, 3].map((index) => (
-          <Tile
-            key={index}
-            src={images[index]}
-            onPick={handlePick(index)}
-            className="aspect-square w-full"
-            ImageProps={{
-              className: 'border-10 border-white object-cover',
-            }}
-          />
+          <div key={index} className="border-10 border-white">
+            <Tile
+              src={images[index]}
+              onPick={handlePick(index)}
+              className="aspect-square w-full"
+              ImageProps={{
+                className: 'object-cover',
+              }}
+            />
+          </div>
         ))}
       </div>
     </div>
