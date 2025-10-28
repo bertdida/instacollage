@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react'
-import { IconPlus } from '@tabler/icons-react'
+import { IconCamera } from '@tabler/icons-react'
 import cn from '../cn'
 
 type TileProps = {
@@ -184,9 +184,9 @@ const Tile: React.FC<TileProps> = ({
         type="button"
         onClick={() => inputRef.current?.click()}
         aria-label="Change image"
-        className="absolute right-2 bottom-2 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black/30 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+        className="absolute right-3 bottom-3 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       >
-        <IconPlus className="h-8 w-8 text-white" />
+        <IconCamera className="h-7 w-7 text-white" />
       </button>
 
       <img
